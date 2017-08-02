@@ -58,6 +58,17 @@ for(var i = 0; i < 10; i++) {
   })(i);
 }
 
+function returnValue(val) {
+  function innerValue() {
+    console.log(val);
+  }
+  return innerValue;
+}
+
+for (var i = 0; i < 10; i++) {
+  setTimeout(returnValue(i), 1000);
+}
+
 function test() { // a scope
   for(var i = 0; i < 10; i++) { // not a scope
     // count
