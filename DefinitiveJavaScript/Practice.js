@@ -12,3 +12,6 @@ console.log(isNaN(notANumber)); // true
 
 console.log(typeof null); // object
 console.log(typeof undefined); // undefined
+
+var person = {};
+person.name = 'Parker';
