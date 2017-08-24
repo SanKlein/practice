@@ -90,7 +90,7 @@ var findMaxCrossingSubarray= function(A, low, mid, high) {
   return [maxLeft, maxRight, leftSum + rightSum];
 }
 
-// return the maximum sub array
+// algorithm for the maximum sub array problem
 function findMaxSubarray(A, low, high) {
   if (high === low) {
     return [low, high, A[low]];
@@ -109,5 +109,29 @@ function findMaxSubarray(A, low, high) {
   }
 }
 
-var arrayMax = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7];
-console.log(findMaxSubarray(arrayMax, 0, arrayMax.length - 1));
+// var arrayMax = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7];
+// console.log(findMaxSubarray(arrayMax, 0, arrayMax.length - 1));
+
+// square matrix multiplication
+var squareMatrixMultiply = function(A, B) {
+  var len = A.length;
+  var C = [];
+  for (var i = 0; i < len; i++) {
+    C[i] = [];
+    for (var j = 0; j < len; j++) {
+      C[i] = C[i].concat(0);
+    }
+  }
+  for (var i = 0; i < len; i++) {
+    for (var j = 0; j < len; j++) {
+      for (var k = 0; k < len; k++) {
+        C[i][j] = C[i][j] + (A[i][k] * B[k][j]);
+      }
+    }
+  }
+  return C;
+}
+
+var arrayA = [[1, 2], [3, 4]];
+var arrayB = [[2, 0], [1, 2]];
+console.log(squareMatrixMultiply(arrayA, arrayB));
