@@ -321,3 +321,122 @@ var countingSort = function(A, B, k) {
     C[A[j]] = C[A[j]] - 1;
   }
 };
+
+// bucket sort
+var bucketSort = function(A) {
+  var B = [];
+  var n = A.length;
+  for (var i = 0; i <= n; i++) {
+    B[i] = [];
+  }
+  for (var i = 0; i < n; i++) {
+    B[n * A[i]] = A[i];
+  }
+  for (var i = 0; i < n; i++) {
+    insertionSort(B[i]);
+  }
+  // concatenate the lists B[0], B[1], ..., B[n - 1] together in order
+};
+
+
+// minimum and maximum
+var minimum = function(A) {
+  var min = A[0];
+  for (var i = 1; i < A.length; i++) {
+    if (min > A[i]) {
+      min = A[i];
+    }
+  }
+  return min;
+};
+
+function randomizedSelect(A, p, r, i) {
+  if (p == r) {
+    return A[p];
+  }
+  var q = randomizedPartition(A, p, r);
+  var k = q - p + 1;
+  if (i === k) {
+    return A[q];
+  } else if (i < k) {
+    return randomizedSelect(A, p, q - 1, i);
+  } else {
+    return randomizedSelect(A, q + 1, r, i - k);
+  }
+}
+
+
+// stacks
+var stackEmpty = function(S) {
+  if (S.top === 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+var push = function(S, x) {
+  S.top = S.top + 1;
+  S[S.top] = x;
+};
+
+var pop = function(S) {
+  if (stackEmpty(S)) {
+    throw Exception('underflow');
+  } else {
+    S.top = S.top - 1;
+    return S[S.top + 1];
+  }
+};
+
+
+// queue
+var enqueue = function(Q, x) {
+  Q[Q.tail] = x;
+  if (Q.tail == Q.length) {
+    Q.tail = 1;
+  } else {
+    Q.tail = Q.tail + 1;
+  }
+};
+
+var dequeue = function(Q) {
+  x = Q[Q.head];
+  if (Q.head == Q.length) {
+    Q.head = 1;
+  } else {
+    Q.head = Q.head + 1;
+  }
+  return x;
+};
+
+
+// linked lists
+var listSearch = function(L, k) {
+  var x = L.head;
+  while (x !== null && x.key !== k) {
+    x = x.next;
+  }
+  return x;
+};
+
+var listInsert = function(L, x) {
+  x.next = L.head;
+  if (L.head !== null) {
+    L.head.prev = x;
+  }
+
+  L.head = x;
+  x.prev = null;
+};
+
+var listDelete = function(L, x) {
+  if (x.prev != null) {
+    x.prev.next = x.next;
+  } else {
+    L.head = x.next;
+  }
+  if (x.next != null) {
+    x.next.prev = x.prev;
+  }
+};
