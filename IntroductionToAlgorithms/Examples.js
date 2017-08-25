@@ -112,6 +112,7 @@ function findMaxSubarray(A, low, high) {
 // var arrayMax = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7];
 // console.log(findMaxSubarray(arrayMax, 0, arrayMax.length - 1));
 
+
 // square matrix multiplication
 var squareMatrixMultiply = function(A, B) {
   var len = A.length;
@@ -132,6 +133,191 @@ var squareMatrixMultiply = function(A, B) {
   return C;
 }
 
-var arrayA = [[1, 2], [3, 4]];
-var arrayB = [[2, 0], [1, 2]];
-console.log(squareMatrixMultiply(arrayA, arrayB));
+// var arrayA = [[1, 2], [3, 4]];
+// var arrayB = [[2, 0], [1, 2]];
+// console.log(squareMatrixMultiply(arrayA, arrayB));
+
+var candidates = [];
+
+function hireAssistant(n) {
+  var best = 0; // candidate 0 is a least-qualified dummy candidate
+  for (var i = 0; i < candidates.length; i++) {
+    var performance = interview(candidates[i]);
+    if (performance > best) {
+      best = performance;
+      hire(candidates[i])
+    }
+  }
+}
+
+function permuteBySorting(A) {
+  var n = A.length;
+  var P = [];
+  for (var i = 0; i < n; i++) {
+    P[i] = Math.floor(Math.random() * Math.pow(n,3));
+  }
+  // sort A, using P as sort keys
+}
+
+function randomizeInPlace(A) {
+  var n = A.length;
+  for (var i = 0; i < n; i++) {
+    var rand = Math.floor(Math.rand() * n);
+    var temp = A[i];
+    A[i] = A[rand];
+    A[rand] = temp;
+  }
+
+  return A;
+}
+
+
+// heaps
+function parent(i) {
+  return i / 2;
+}
+
+function left(i) {
+  return 2 * i;
+}
+
+function right(i) {
+  return 2 * i + 1;
+}
+
+function maxHeapify(A, i) {
+  l = left(i);
+  r = right(i);
+  var largest, temp;
+  if (l <= A.heapSize && A[l] > A[i]) {
+    largest = l;
+  } else {
+    largest = i;
+  }
+  if (r <= A.heapSize && A[r] > A[largest]) {
+    largest = r;
+  }
+  if (largest !== i) {
+    temp = A[i];
+    A[i] = A[largest];
+    A[largest] = temp;
+    maxHeapify(A, largest);
+  }
+}
+
+var buildMaxHeap = function(A) {
+  A.heapSize = A.length;
+  for (var i = A.length / 2 - 1; i >= 0; i--) {
+    maxHeapify(A, i);
+  }
+};
+
+var heapsort = function(A) {
+  buildMaxHeap(A);
+  var temp;
+  for (var i = A.length - 1; i >= 1; i--) {
+    temp = A[1];
+    A[1] = A[i];
+    A[i] = temp;
+    A.heapSize = A.heapSize - 1;
+    maxHeapify(A, 1);
+  }
+};
+
+var heapExtractMax = function(A) {
+  if (A.heapSize < 1) {
+    throw Exception("heap underflow");
+  }
+  var max = A[0];
+  A[0] = A[A.heapSize];
+  A.heapSize = A.heapSize - 1;
+  maxHeapify(A, 1);
+  return max;
+};
+
+var heapIncreaseKey = function(A, i, key) {
+  if (key < A[i]) {
+    throw Exception("new key is smaller than current key");
+  }
+  A[i] = key;
+  var temp;
+  while (i > 1 && A[parent(i)] < A[i]) {
+    temp = A[i];
+    A[i] = A[parent(i)];
+    A[parent(i)] = temp;
+    i = parent(i);
+  }
+};
+
+var maxHeapInsert = function(A, key) {
+  A.heapSize = A.heapSize + 1;
+  A[A.heapSize] = -Infinity;
+  heapIncreaseKey(A, A.heapSize, key);
+};
+
+
+// quicksort
+function quickSort(A, p, r) {
+  if (p < r) {
+    var q = partition(A, p, r);
+    A = quickSort(A, p, q - 1);
+    A = quickSort(A, q + 1, r);
+  }
+  return A;
+}
+
+var partition = function(A, p, r) {
+  var x = A[r];
+  var i = p - 1;
+  var temp;
+  for (var j = p; j <= r - 1; j++) {
+    if (A[j] <= x) {
+      i++;
+      temp = A[i];
+      A[i] = A[j];
+      A[j] = temp;
+    }
+  }
+  temp = A[i + 1];
+  A[i + 1] = A[r];
+  A[r] = temp;
+  return i + 1;
+};
+
+var randomizedPartition = function(A, p, r) {
+  var i = Math.floor(Math.random() * (r - p));
+  var temp = A[r];
+  A[r] = A[i];
+  A[i] = temp;
+  return partition(A, p, r);
+};
+
+function randomizedQuickSort(A, p, r) {
+  if (p < r) {
+    var q = randomizedPartition(A, p, r);
+    A = randomizedQuickSort(A, p, q - 1);
+    A = randomizedQuickSort(A, q + 1, r);
+  }
+  return A;
+}
+
+
+// counting sort
+var countingSort = function(A, B, k) {
+  var C = [];
+  for (var i = 0; i <= k; i++) {
+    C[i] = 0;
+  }
+  for (var j = 0; j < A.length; j++) {
+    C[A[j]] = C[A[j]] + 1;
+  }
+  // C[i] now contains the number of elements equal to i
+  for (var i = 0; i <= k; i++) {
+    C[i] = C[i] + C[i-1];
+  }
+  // C[i] now contains the number of elements less than or equal to i
+  for (var j = A.length - 1; j >= 0; j--) {
+    B[C[A[j]]] = A[j];
+    C[A[j]] = C[A[j]] - 1;
+  }
+};
