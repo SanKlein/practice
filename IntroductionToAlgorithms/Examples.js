@@ -673,3 +673,78 @@ var rbDelete = function(T, z) {
     rbDeleteFixup(T, x);
   }
 };
+
+
+// rod cutting problem
+function cutRod(p, n) {
+  if (n === 0) {
+    return 0;
+  }
+  var q = -Infinity;
+  for (var i = 0; i < n; i++) {
+    q = Math.max(q, p[i] + cutRod(p, n - i));
+  }
+  return q;
+}
+
+function memoizedCutRod(p, n) {
+  var r = [];
+  for (var i = 0; i < n; i++) {
+    r[i] = -Infinity;
+  }
+  return memoizedCutRodAux(p, n, r);
+}
+
+function memoizedCutRodAux(p, n, r) {
+  var q;
+  if (r[n] >= 0) {
+    return r[n];
+  }
+  if (n == 0) {
+    q = 0;
+  } else {
+    q = -Infinity;
+    for (var i = 0; i < n; i++) {
+      q = Math.max(q, p[i] + memoizedCutRodAux(p, n - i, r));
+    }
+  }
+  r[n] = q;
+  return q;
+}
+
+var bottomUpCutRod = function(p, n) {
+  var r = [];
+  var q;
+  r[0] = 0;
+  for (var j = 0; j < n; j++) {
+    q = -Infinity;
+    for (var i = 0; i < j; i++) {
+      q = max(q, p[i] + r[j - 1]);
+    }
+    r[j] = q;
+  }
+  return r[n];
+};
+
+var extendedBottomUpCutRod = function(p, n) {
+  var q, r = [], s = [];
+  for (var j = 0; j < n; j++) {
+    q = -Infinity;
+    for (var i = 0; i < j; i++) {
+      if (q < p[i] + r[j - i]) {
+        q = p[i] + r[j - i];
+        s[j] = i;
+      }
+    }
+    r[j] = q;
+  }
+  return { r, s };
+};
+
+var printCutRodSolution = function(p, n) {
+  var { r, s} = extendedBottomUpCutRod(p, n);
+  while (n > 0) {
+    console.log(s[n]);
+    n = n - s[n];
+  }
+};
