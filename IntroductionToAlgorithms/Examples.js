@@ -551,3 +551,125 @@ var treeDelete = function(T, z) {
     y.left.p = y;
   }
 }
+
+
+// red-black trees
+var leftRotate = function(T, x) {
+  var y = x.right;
+  x.right = y.left;
+  if (y.left !== T.nil) {
+    y.left.p = x;
+  }
+  y.p = x.p;
+  if (x.p === T.nil) {
+    T.root = y;
+  } else if (x === x.p.left) {
+    x.p.left = y;
+  } else {
+    x.p.right = y;
+  }
+  y.left = x;
+  x.p = y;
+};
+
+var rbInsert = function(T, z) {
+  var y = T.nil;
+  var x = T.root;
+  while (x !== T.nil) {
+    y = x;
+    if (z.key < x.key) {
+      x = x.left;
+    } else {
+      x = x.right;
+    }
+  }
+  z.py = y;
+  if (y === T.nil) {
+    T.root = z;
+  } else if (z.key < y.key) {
+    y.left = y;
+  } else {
+    y.right = z;
+  }
+  z.left = T.nil;
+  z.right = T.nil;
+  z.color = red;
+  rbInsertFixup(T, z);
+}
+
+var rbInsertFixup = function(T, z) {
+  while (z.p.color == red) {
+    if (z.p == z.p.p.left) {
+      y = z.p.p.right;
+      if (y.color == red) {
+        z.p.color = black;
+        y.color = black;
+        z.p.p.color = red;
+        z = z.p.p;
+      } else if (z === z.p.right) {
+        z = z.p;
+        leftRotate(T, z);
+        z.p.color = black;
+        z.p.p.color = red;
+        rightRotate(T, z.p.p);
+      }
+    } else {
+      y = z.p.p.left;
+      if (y.color == red) {
+        z.p.color = black;
+        y.color = black;
+        z.p.p.color = red;
+        z = z.p.p;
+      } else if (z === z.p.left) {
+        z = z.p;
+        rightRotate(T, z);
+        z.p.color = black;
+        z.p.p.color = red;
+        leftRotate(T, z.p.p);
+      }
+    }
+  }
+  T.root.color = black;
+};
+
+var rbTransplant = function(T, u, v) {
+  if (u.p === T.nil) {
+    T.root = v;
+  } else if (u == u.p.left) {
+    u.p.left = v;
+  } else {
+    u.p.right = v;
+  }
+  v.p = u.p;
+};
+
+var rbDelete = function(T, z) {
+  var y = z;
+  var yOriginalColor = y.color;
+  var x;
+  if (z.left === T.nil) {
+    x = z.right;
+    rbTransplant(T, z, z.right);
+  } else if (z.right === T.nil) {
+    z = z.left;
+    rbTransplant(T, z, z.left);
+  } else {
+    y = treeMinimum(z.right);
+    yOriginalColor = y.color;
+    x = y.right;
+    if (y.p === z) {
+      x.p = y;
+    } else {
+      rbTransplant(T, y, y.right);
+      y.right = z.right;
+      y.right.p = y;
+    }
+    rbTransplant(T, z, y);
+    y.left = z.left;
+    y.left.p = y;
+    y.color = z.color;
+  }
+  if (yOriginalColor === black) {
+    rbDeleteFixup(T, x);
+  }
+};
