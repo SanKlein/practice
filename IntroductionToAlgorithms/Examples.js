@@ -748,3 +748,89 @@ var printCutRodSolution = function(p, n) {
     n = n - s[n];
   }
 };
+
+// p = [1, 5, 8, 9, 10, 17, 17, 20, 24, 30];
+// printCutRodSolution(p, 10);
+
+
+// greedy algorithms
+function recursiveActivitySelector(s, f, k, n) {
+  var m = k + 1;
+  while (m <= n && s[m] < f[k]) {
+    m = m + 1;
+  }
+  if (m <= n) {
+    return s[m].concat(recursiveActivitySelector(s, f, m, n));
+  } else {
+    return;
+  }
+}
+
+var greedyActivitySelector = function(s, f) {
+  var n = s.length;
+  var A = s[0];
+  var k = 1;
+  for (var m = 1; m < n; m++) {
+    if (s[m] >= f[k]) {
+      A = A.concat(s[m]);
+      k = m;
+    }
+  }
+  return A;
+}
+
+
+// huffman codes
+var huffman = function(C) {
+  var n = Math.abs(C);
+  var Q = C;
+  for (var i = 0; i < n; i++) {
+    var z = new Node();
+    z.left = x = extractMin(Q);
+    z.right = y = extractMin(Q);
+    z.freq = x.freq + y.freq;
+    insert(Q, z);
+  }
+  return extractMin(Q);
+};
+
+
+// graph algorithms
+// breadth-first search
+var bfs = function(G, s) {
+  for (v in G) {
+    if (v !== s) {
+      v.color = 'white';
+      v.d = Infinity;
+      v.p = null;
+    }
+  }
+  s.color = 'gray';
+  s.d = 0;
+  s.p = null
+  var Q = [];
+  Q = enqueue(Q, s);
+  while (Q.length) {
+    var u = dequeue(Q);
+    G.Adj[u].forEach(function(v) {
+      if (v.color === 'white') {
+        v.color = 'gray';
+        v.d = u.d + 1;
+        v.p = u;
+        Q = enqueue(Q, v);
+      }
+    });
+    u.color = 'black';
+  }
+};
+
+function printPath(G, s, v) {
+  if (v === s) {
+    console.log(s);
+  } else if (v.p === null) {
+    console.log('no path from ' + s + ' to ' + v);
+  } else {
+    printPath(G, s, v.p);
+    console.log(v);
+  }
+}
