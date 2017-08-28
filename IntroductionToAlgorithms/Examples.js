@@ -976,3 +976,95 @@ var squareMatrixMultiply = function(A, B) {
   }
   return C;
 };
+
+
+// max flow
+// ford and fulkersons method
+var fordFulkerson = function(G, s, t) {
+  G.E.forEach(function(u, v) {
+    (u, f).f = 0;
+  });
+  while (p in Gf) {
+    cf(p) = Math.min(cf in p);
+    p.forEach(function(u, v) {
+      if ((u, v) in E) {
+        (u, v).f = (u, v).f + cf(p);
+      } else {
+        (u, v).f = (v, u).f - cf(p);
+      }
+    })
+  }
+};
+
+
+// string matching
+// brute force
+var naiveStringMatcher = function(T, P) {
+  var n = T.length;
+  var m = P.length;
+  for (var s = 0; s < n - m; s++) {
+    if (P === T.slice(s, s + m)) {
+      console.log('Pattern occurs with shift: ' + s);
+    }
+  }
+};
+
+// rabin-karp algorithm
+var rabinKarpMatcher = function(T, P, d, q) {
+  var n = T.length;
+  var m = P.length;
+  var h = Math.power(d, m - 1) % q;
+  var p = 0;
+  var t0 = 0;
+  for (var i = 0; i < m; i++) {
+    p = (d * p + P[i]) % q;
+    t0 = (d * t0 + T[i]) % q;
+  }
+  for (var s = 0; s < n - m; s++) {
+    if (p == t) {
+      if (P == T.slice(s, s + m)) {
+        console.log('Pattern occurs w/ shift: ' + s);
+      }
+      if (s < n - m) {
+        t = (d(t - T[s + 1] * h) + T[s + m + 1]) % q;
+      }
+    }
+  }
+};
+
+// knuth-morris-pratt algorithm
+var kmpMatcher = function(T, P) {
+  var n = T.length;
+  var m = P.length;
+  var A = computePrefixFunction(P);
+  var q = 0;
+  for (var i = 0; i < n; i++) {
+    while (q > 0 && P[q + 1] !== T[i]) {
+      q = A[q];
+    }
+    if (P[q + 1] === T[i]) {
+      q = q + 1;
+    }
+    if (q === m) {
+      console.log('Pattern occurs with shift ' + i - m);
+      q = A[q];
+    }
+  }
+};
+
+var computePrefixFunction = function(P) {
+  var m = P.length;
+  var A = [];
+  A[1] = 0;
+  var k = 0;
+  for (var q = 1; q < m; q++) {
+    while (k > 0 && P[k + 1] !== P[q]) {
+      k = A[k];
+    }
+    if (P[k + 1] === P[q]) {
+      k = k + 1;
+    }
+    A[q] = k;
+  }
+  return A;
+};
