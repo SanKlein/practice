@@ -834,3 +834,145 @@ function printPath(G, s, v) {
     console.log(v);
   }
 }
+
+// depth-first search
+var dfs = function(G) {
+  G.V.forEach(function(u) {
+    u.color = 'white';
+    u.p = null;
+  });
+  time = 0;
+  G.V.forEach(function(u) {
+    if (u.color === 'white') {
+      dfsVisit(G, u);
+    }
+  });
+};
+
+function dfsVisit(G, u) {
+  time++;
+  u.d = time;
+  u.color = 'gray';
+  G.Adj[u].forEach(function(v) {
+    if (v.color === 'white') {
+      v.p = u;
+      dfsVisit(G, v);
+    }
+  });
+  u.color = 'black';
+  time++;
+  u.f = time;
+}
+
+// minimum spanning trees
+// kruskals algorithm
+var mstKruskal(G, w) {
+  var A = [];
+  G.V.forEach(function(v) {
+    makeSet(v);
+  });
+  G.E.sort(function(a, b) {
+    return w(a) - w(b);
+  });
+  G.E.forEach(function(v, u) {
+    if (findSet(u) !== findSet(v)) {
+      A.push((u,v);
+      union(u, v);
+    }
+  })
+  return A;
+}
+
+// prim's algorithm
+var mstPrim = function(G, w, r) {
+  G.V.forEach(function(u) {
+    u.key = Infinity;
+    u.p = null;
+  });
+  r.key = 0;
+  var Q = G.V;
+  while (Q.length) {
+    u = extractMin(Q);
+    G.Adj[u].forEach(function(v) {
+      if (Q === findSet(v) && w(u, v) < v.key) {
+        v.p = u;
+        v.key = w(u, v);
+      }
+    });
+  }
+};
+
+// shortest path algorithms
+var initializeSingleSource = function(G, s) {
+  G.V.forEach(function(v) {
+    v.d = Infinity;
+    v.p = null;
+  });
+  s.d = 0;
+};
+
+var relax = function(u, v, w) {
+  if (v.d > u.d + w(u, v)) {
+    v.d = u.d + w(u, v);
+    v.p = u;
+  }
+};
+
+//bellman-ford algorithm
+var bellmanFord = function(G, w, s) {
+  initializeSingleSource(G, s);
+  for (var i = 0; i < G.V.length; i++) {
+    G.E.forEach(function(u, v) {
+      relax(u, v, w);
+    });
+  }
+  G.E.forEach(function(u, v) {
+    if (v.d > u.d + w(u, v)) {
+      return false;
+    }
+  });
+  return true;
+};
+
+var dagShortestPaths = function(G, w, s) {
+  G.V = topologicallySort(G.V);
+  initializeSingleSource(G, s);
+  G.V.forEach(function(u) {
+    G.Adj[u].forEach(function(v) {
+      relax(u, v, w);
+    });
+  });
+};
+
+var dijkstra = function(G, w, s) {
+  initializeSingleSource(G, s);
+  var S = [];
+  var Q = G.V;
+  while (Q.length) {
+    var u = extractMin(Q);
+    S.push(u);
+    G.Adj[u].forEach(function(v) {
+      relax(u, v, w);
+    });
+  }
+};
+
+
+// square matrix multiply
+var squareMatrixMultiply = function(A, B) {
+  var n = A.length;
+  var C = [];
+  var i, j, k;
+  for (i = 0; i < n; i++) {
+    C[i] = [];
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      C[i][j] = 0;
+      for (k = 0; k < n; k++) {
+        C[i][j] = C[i][j] + A[i][k] * A[k][j];
+      }
+    }
+  }
+  return C;
+};
