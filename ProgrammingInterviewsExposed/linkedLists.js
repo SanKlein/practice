@@ -234,3 +234,21 @@ function flatten(elem) {
   }
   return { head, tail };
 }
+
+function acyclic(elem) {
+  var slow = elem;
+  var fast = elem.next;
+
+  while (slow && fast) {
+    if (!fast || !fast.next) {
+      return true; // found end
+    }
+    if (slow === fast || fast.next === slow) {
+      return false; // found cycle
+    }
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+
+  return true; // found end
+}
