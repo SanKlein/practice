@@ -121,3 +121,56 @@ function lowestCommonAncestor(root, val1, val2) {
 
   return;
 }
+
+function binaryTreeToHeap(root) {
+  if (!root) return root;
+  return createArrayFromTree(root).sort(compareNodes(a, b)).buildHeap(arr);
+}
+
+function createArrayFromTree(root) {
+  if (!root) return [];
+
+  return root.concat(createArrayFromTree(root.left), createArrayFromTree(root.right));
+}
+
+function compareNodes(node1, node2) {
+  return node1.value - node2.value;
+}
+
+function buildHeap(arr) {
+  var root = arr.shift();
+  var nodes = [root];
+
+  while (arr.length) {
+    var node = nodes.shift();
+    var node1 = arr.shift();
+    var node2 = arr.shift();
+    node.left = node1;
+    node.right = node2;
+    nodes.push(node1, node2);
+  }
+
+  return root;
+}
+
+function rotateRight(root) {
+  var newRoot = root.left;
+  root.left = newRoot.right;
+  newRoot.right = root;
+  return newRoot;
+}
+
+function setBaconNumbers(kevin) {
+  kevin.baconNumber = 0;
+  var queue = [kevin];
+
+  while (queue.length) {
+    var current = queue.shift();
+    current.linkedActors.forEach(actor => {
+      if (actor.baconNumber !== -1) {
+        actor.baconNumber = current.baconNumber + 1;
+        q.push(actor);
+      }
+    });
+  }
+}
