@@ -1,14 +1,17 @@
-const AddColorForm = ({onNewColor=f=>f}) => {
+const AddColorForm = (props, { store }) => {
+
     let _title, _color
+
     const submit = e => {
         e.preventDefault()
-        onNewColor(_title.value, _color.value)
+        store.dispatch(addColor(_title.value, _color.value))
         _title.value = ''
         _color.value = '#000000'
         _title.focus()
     }
+
     return (
-        <form onSubmit={submit}>
+        <form className="add-color" onSubmit={submit}>
             <input ref={input => _title = input}
                    type="text"
                    placeholder="color title..." required/>
@@ -17,4 +20,9 @@ const AddColorForm = ({onNewColor=f=>f}) => {
             <button>ADD</button>
         </form>
     )
+
+}
+
+AddColorForm.contextTypes = {
+    store: PropTypes.object
 }
