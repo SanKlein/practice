@@ -1,10 +1,11 @@
-import { createStore,
-         combineReducers,
-         applyMiddleware } from 'redux'
-import { colors, sort } from './reducers'
-import stateData from './initialState'
+import { colors } from './reducers'
+import {
+    createStore, combineReducers, applyMiddleware
+} from 'redux'
+import thunk from 'redux-thunk'
 
-const logger = store => next => action => {
+
+const clientLogger = store => next => action => {
     let result
     console.groupCollapsed("dispatching", action.type)
     console.log('prev state', store.getState())
@@ -12,20 +13,25 @@ const logger = store => next => action => {
     result = next(action)
     console.log('next state', store.getState())
     console.groupEnd()
-}
-
-const saver = store => next => action => {
-    let result = next(action)
-    localStorage['redux-store'] = JSON.stringify(store.getState())
     return result
 }
 
-const storeFactory = (initialState=stateData) =>
-    applyMiddleware(logger, saver)(createStore)(
-        combineReducers({colors, sort}),
-        (localStorage['redux-store']) ?
-            JSON.parse(localStorage['redux-store']) :
-            stateData
+const serverLogger = store => next => action => {
+    console.log('\n  dispatching server action\n')
+    console.log(action)
+    console.log('\n')
+    return next(action)
+}
+
+const middleware = server => [
+    (server) ? serverLogger : clientLogger,
+    thunk
+]
+
+const storeFactory = (server = false, initialState = {}) =>
+    applyMiddleware(...middleware(server))(createStore)(
+        combineReducers({colors}),
+        initialState
     )
 
 export default storeFactory

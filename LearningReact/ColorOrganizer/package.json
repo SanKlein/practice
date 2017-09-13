@@ -1,0 +1,16 @@
+{
+  "name": "colororganizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "prestart": "./node_modules/.bin/webpack --progress",
+    "start": "./node_modules/.bin/babel-node index-server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
